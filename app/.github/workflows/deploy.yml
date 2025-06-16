@@ -21,7 +21,7 @@ jobs:
       - name: Test Secrets
         run: |
           echo "Docker Hub user: ${{ secrets.DOCKER_HUB_USERNAME }}"
-          echo "Docker Hub Token (3 primeiros chars): ${{ secrets.DOCKER_HUB_TOKEN != '' && format('{0}...', secrets.DOCKER_HUB_TOKEN[0..3]) || 'N/A' }}"
+          echo "Docker Hub Token (3 primeiros chars): ${{ secrets.DOCKER_HUB_TOKEN}}"
 
   build:
     name: Build Docker Image
