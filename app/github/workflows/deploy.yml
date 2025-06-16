@@ -2,13 +2,13 @@ name: Build and Deploy Docker Image
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   IMAGE_NAME: xsouzax/meusite-bootcamp-devops
-  IMAGE_TAG: 1.0
+  IMAGE_TAG: "1.0"  # Como string para evitar problemas
 
 jobs:
   verify-secrets:
@@ -21,11 +21,11 @@ jobs:
       - name: Test Secrets
         run: |
           echo "Docker Hub user: ${{ secrets.DOCKER_HUB_USERNAME }}"
-          echo "Docker Hub Token (3 primeiros chars): ${{secrets.DOCKER_HUB_TOKEN }}"
+          echo "Docker Hub Token (3 primeiros chars): ${{ secrets.DOCKER_HUB_TOKEN != '' && format('{0}...', secrets.DOCKER_HUB_TOKEN[0..3]) || 'N/A' }}"
 
   build:
     name: Build Docker Image
-    needs: verify-secrets  # Executa apenas após verificar as secrets
+    needs: verify-secrets
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -43,15 +43,3 @@ jobs:
           context: ./app
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-
-  deploy:
-    name: Deploy to AWS
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Deploy to ECS/EC2
-        run: |
-          echo "Deploying ${{ env.IMAGE_NAME}}:${{ env.IMAGE_TAG }} to AWS"
-          # Exemplo para ECS:
-          # aws ecs update-service --cluster my-cluster --service my-service --force-new-deployment
