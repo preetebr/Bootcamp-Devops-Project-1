@@ -43,3 +43,5 @@ jobs:
           context: ./app
           push: true
           tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+          
